@@ -1,0 +1,119 @@
+<!-- manageorder.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/componet/logo.jpg" type="image/x-icon">
+    <title>Manage Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: #3498db;
+        }
+
+        a:hover {
+            color: #297fb8;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 600px) {
+            th, td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            th, td {
+                text-align: center;
+            }
+
+            tbody {
+                display: block;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+        }
+
+        select {
+            padding: 5px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'basic/admin_navbar.html' %}
+    <div class="container">
+        <h1>Manage Orders</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Current Status</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.orderid }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>{{ order.customer.customer_id }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>
+                            <form action="{% url 'update_order_status' order.orderid %}" method="post">
+                                {% csrf_token %}
+                                <select name="new_status">
+                                    <option value="pending" {% if order.status == "pending" %} selected {% endif %}>Pending</option>
+                                    <option value="delivered" {% if order.status == "delivered" %} selected {% endif %}>Delivered</option>
+                                    <option value="canceled" {% if order.status == "canceled" %} selected {% endif %}>Canceled</option>
+                                </select>
+                                
+                        </td>
+                        <td>
+                            <input type="submit" value="Update">
+                        </td>
+                            </form>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

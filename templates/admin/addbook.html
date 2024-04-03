@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/componet/logo.jpg" type="image/x-icon">   
+    <title>Add Books</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url("/static/componet/back_login.jpg");
+         }
+
+        .register-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+            margin-bottom: 30px;
+
+        }
+
+        .container {
+            background-color: rgb(226, 226, 233);
+            margin: 10px;
+            padding: 20px;
+            width: 700px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: black;
+            text-align: center;
+        }
+
+        h4 {
+            margin-top: 10px;
+            display: inline-block;
+            width: 125px; /* Adjust the width as needed */
+        }
+
+        input, textarea,select {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: calc(100% - 130px); /* Adjust the width as needed */
+            box-sizing: border-box;
+            display: inline-block;
+        }
+
+        input[type="submit"] {
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            width: 25%;
+            border-radius: 20px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+
+            h4 {
+                display: block;
+                width: 100%;
+            }
+
+            input, textarea {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'basic/admin_navbar.html' %}
+    <div class="register-container">
+        <div class="container">
+            <h1>Add Books</h1>
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message" style = "color:red;">{{ message }}</p>
+                {% endfor %}
+            {%endif%}
+            <form action="{% url 'addbook'%}" method="post" enctype="multipart/form-data">
+                {% csrf_token %} 
+                <h4>Book Name :</h4>
+                <input id="Book" type="text" name="Bookname" placeholder="Book Name"><br>
+
+                <h4>Catagory:</h4>
+                <input type="text" name="Category" placeholder="Catagory Name"><br>
+
+                <h4>Price :</h4>
+                <input type="text" name="price" placeholder="price"><br>
+
+                <h4>Description :</h4>
+                <textarea name="description" placeholder="Description"></textarea><br>
+
+                <h4>Author Name :</h4>
+                <input type="text" name="author" placeholder="author"><br>
+                
+                <h4>Genre :</h4>
+                <input type="text" name="genre" placeholder="genre"><br>
+              
+                <h4>Book Image :</h4>
+                <input type="file" name="file"><br>
+
+                <h4>Stock:</h4>
+                <select name="stock">
+                    <option value="available" {% if book.stock == "available" %} selected {% endif %}>Available</option>
+                    <option value="out-stock" {% if book.stock == "out-stock" %} selected {% endif %}>Out-stock</option>
+                </select><br>
+
+                <input type="submit" value="ADD">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

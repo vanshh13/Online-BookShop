@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/static/componet/logo.jpg">
+
+    <title>Order Tracking</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0px;
+            color: #333;
+        }
+
+        header {
+            background-color: #ff6700;
+            color: #fff;
+            text-align: center;
+            padding: 12px 0;
+            width: 100%;
+        }
+
+        .tracking-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tracking-form {
+            text-align: center;
+        }
+
+        button {
+            background-color: #ff6700;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #ff8000;
+        }
+
+        .tracking-result {
+            margin-top: 20px;
+            text-align: center;
+            display: none; /* Initially hidden */
+        }
+
+        .tracking-details {
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+            bottom: 0;
+            position: fixed;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Order Tracking</h1>
+    </header>
+    <div class="tracking-container">
+        <div id="trackingForm" class="tracking-form">
+            <button id="trackButton" onclick="trackOrder({{ orderTrackData|safe }})">Track Order</button>
+        </div>
+
+        <div class="tracking-result" id="trackingResult">
+        </div>
+
+        <div class="tracking-details" id="trackingDetails">
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2023 Your Company Name
+    </footer>
+    <script>
+        var loggedInUser = {
+            orderNumber: "12345",
+            email: "user@example.com",
+            orderImage: "/static/componet/delivery-tracking.jpg" 
+        };
+    
+        function trackOrder(orderTrackData) {
+            var orderImage = loggedInUser.orderImage;
+    
+            var resultMessage = "Your order is on the way!";
+    
+            var trackingDetails = "Expected delivery: " + orderTrackData.date;
+            if (orderTrackData.status === "delivered") {               
+                trackingDetails = "Order delivered";
+                resultMessage = "Your order is delivered successfully!";
+            }
+    
+            var trackButton = document.getElementById('trackButton');
+            var trackingResult = document.getElementById('trackingResult');
+            var trackingDetailsContainer = document.getElementById('trackingDetails');
+    
+            if (trackButton) {
+                trackButton.style.display = 'none';
+            }
+    
+            if (trackingResult && trackingDetailsContainer) {
+                trackingResult.innerHTML = `<p>${resultMessage}</p><img src="${orderImage}" alt="Order Image" style="max-width: 20%;">`;
+                trackingDetailsContainer.innerHTML = `<p>${trackingDetails}</p>`;
+                trackingResult.style.display = 'block';
+                trackingDetailsContainer.style.display = 'block';
+            }
+        }
+
+        
+    </script>
+    
+</body>
+
+</html>

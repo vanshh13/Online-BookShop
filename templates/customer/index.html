@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" type="image/x-icon" href="/static/componet/logo.jpg">
+    <title>VV Online BookStore</title>
+    {% load static %}
+    {% csrf_token %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        .add-to-cart-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .add-to-cart-button:hover {
+            background-color: #0056b3;
+        }
+        .book {
+            width: calc(25% - 20px); 
+            font-size: large;
+            border: 1px solid #ddd;
+            padding: 1%; 
+            margin: 1%; 
+            text-align: center;
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            var nav = document.getElementById("nav");
+            var body = document.body;
+            var isMenuOpen = nav.classList.toggle("show");
+
+            body.classList.toggle("menu-open", isMenuOpen);
+
+            var navLinks = document.querySelectorAll("#nav a");
+            navLinks.forEach(function (link) {
+                link.addEventListener("click", function () {
+                    nav.classList.remove("show");
+                    body.classList.remove("menu-open");
+                });
+            });
+        }
+
+        function addToCart(bookTitle) {
+            alert('Added "' + bookTitle + '" to the cart!');
+        }
+
+        function submitCategory(category) {
+            document.getElementById('categoryInput').value = category;
+            document.getElementById('categoryForm').submit();
+        }
+    </script>
+
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="/static/componet/logo.jpg" alt="Logo">
+        </div>
+        <div class="search-bar">
+        {% if profile%}
+        <form method="post" action="{% url 'dashboard_view' %}">
+        {% else %}
+        <form method="post" action="{% url 'hom' %}">
+        {%endif%}
+
+            {% csrf_token %}
+            <input type="text" id="query" name="query" placeholder="Search..." required>
+            <button type="submit">Search</button>
+        
+        </form>
+    </div>
+        <div class="menu-icon" onclick="toggleMenu()">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+       
+        <nav id="nav">
+            <ul>
+                <li>
+                    <div class="profile-icon">
+                        <a href="profile/">{% if profile.image %}
+                            <img src="{{ profile.image.url }}" alt="Profile Picture">
+                        {% else %}
+                            <img src="/static/componet/profile.png" alt="Default Profile Picture">
+                        {% endif %}
+                        </a>
+                    </div>
+                </li>                
+                <li> <div class="profile-icon">
+                    <a href="shopping/"><img src="/static/componet/shopping.png" alt="Profile Icon">
+                    </a>
+                </li>
+                {% comment %} {% if request.user is not none%} {% endcomment %}
+                {% if profile %}
+                <li><a href="/dashboard/">Home</a></li>
+                <li><a href="about/">About</a></li>
+                {% else %}
+                <li><a href="/">Home</a></li>
+                <li><a href="/about/">About</a></li>
+                {%endif%}
+            </ul>
+        </nav>
+
+    </header>
+
+    <div class="mar">
+        <section class="book-categories">
+            <h3>Category</h3><br>
+            {% csrf_token %}
+            <a href="#" onclick="submitCategory('Fiction')"><span class="category">Fiction</span></a>
+            <a href="#" onclick="submitCategory('Mystery')"><span class="category">Mystery</span></a>
+            <a href="#" onclick="submitCategory('Religious')"><span class="category">Religious</span></a>
+            <a href="#" onclick="submitCategory('Science Fiction')"><span class="category">Science Fiction</span></a>
+            {% if profile%}
+            <form id="categoryForm" method="post" action="{% url 'dashboard_view' %}">
+            {% else %}
+            <form id="categoryForm" method="post" action="{% url 'hom' %}">
+            {% endif%} 
+                {% csrf_token %}
+                <input type="hidden" id="categoryInput" name="query" value="">
+            </form>
+        </section>
+
+        <section id="home" class="book-catalog">
+            {% for book in books %}
+                {% if book.stock == "available" %}        
+                    <div class="book">
+                        {% if request.user is not none%}
+                        <a href="{% url 'book_detail_auth' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
+                        {% else %}
+                        <a href="{% url 'book_detail' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
+                        {% endif%}
+                        <h3>{{ book.book_name }}</h3>
+                        <p>Author: {{ book.author_name }}</p>
+                        <p>Genre: {{ book.genre }}</p>
+                        <p>Price: {{ book.price }}</p>
+                        <form method="post" action="{% url 'Addtocart_book' %}">
+                            {% csrf_token %}
+                            <input type="hidden" id="book" name="book" value="{{book.book_id}}">
+                            <button class="add-to-cart-button" onclick="addToCart('{{ book.book_name }}')">Add to Cart</button>
+                        </form>
+                    </div>
+                {%else%}
+                <div class="book">
+                    {% comment %} {% if request.user is not none%} {% endcomment %}
+                    {%if profile%}
+                    <a href="{% url 'book_detail_auth' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
+                    {% else %}
+                    <a href="{% url 'book_detail' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
+                    {% endif%}
+                    <h3>{{ book.book_name }}</h3>
+                    <p>Author: {{ book.author_name }}</p>
+                    <p>Genre: {{ book.genre }}</p>
+                    <p>Price: {{ book.price }}</p>
+                    <h3 style= "color:red;">Out of Stock </h3>
+                </div>
+                {% endif%}
+            {% endfor %}
+
+
+        </section>  
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <ul>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-text">
+            <p>&copy; 2023 Your Company Name. All rights reserved.</p>
+        </div>
+
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

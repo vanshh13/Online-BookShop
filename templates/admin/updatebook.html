@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/componet/logo.jpg" type="image/x-icon">   
+
+    <title>Updates Books Details</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url("/static/componet/back_login.jpg");
+        }
+
+
+        .register-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 110vh;
+            margin: 10% 10%;
+
+        }
+        
+        .container {
+            background-color: rgb(226, 226, 233);
+            margin: 10px;
+            padding: 20px;
+            width: 700px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: black;
+            text-align: center;
+        }
+
+        h4 {
+            margin-top: 10px;
+            display: inline-table;
+            width: 115px; 
+        }
+
+        input,select{
+            margin-bottom: 20px;
+            padding: 5px;
+            width: calc(100% - 120px); 
+            box-sizing: border-box;
+            display: inline-block;
+        }
+        textarea{
+            margin-bottom: 20px;
+            padding: 5px;
+            width: calc(100% - 120px);
+            box-sizing: border-box;
+            height: 70px;
+            display: inline-table; 
+        }
+        input[type="submit"] {
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            width: 25%;
+            border-radius: 20px;
+        }
+        input[type="file"] {
+            color: black;
+            cursor: pointer;
+            width: 25%;
+            border-radius: 20px;
+            align-items: center;
+        }
+        .book-catalog {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            margin: 0%;
+        }
+        
+        .book {
+            width: calc(25% - 20px); 
+            font-size: x-small;
+            border: 1px solid #ddd;
+            padding: 1%; 
+            margin: 1%; 
+            text-align: center;
+        }
+        
+        .book img {
+            max-width: 100%; 
+            height: 250px; 
+            object-fit: cover; 
+            margin-bottom: 5px;
+        }
+        
+
+        @media screen and (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+
+            h4 {
+                display: block;
+                width: 100%;
+            }
+
+            input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'basic/admin_navbar.html' %}
+
+    <div class="register-container">
+        <div class="container">
+            <h1>Update Books Details</h1>
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message" style = "color:red;">{{ message }}</p>
+                {% endfor %}
+            {%endif%}
+            <form action="{% url 'updatebook' book.book_id%}" method="post" enctype="multipart/form-data">
+                {% csrf_token %} 
+                <h4>Book Name :</h4>
+                <input type="text" name="Bookname" placeholder="Book Name" value="{{book.book_name}}"><br>
+
+                <h4>Catagory:</h4>
+                <input type="text" name="Catagory" placeholder="Catagory" value="{{book.category}}"><br>
+
+                <h4>Price :</h4>
+                <input type="text" name="price" placeholder="price" value="{{book.price}}"><br>
+
+                <h4>Description:</h4>
+                <textarea name="description" placeholder="Description">{{book.description}}</textarea><br>
+
+                <h4>Author Name:</h4>
+                <input type="text" name="author" placeholder="author" value="{{book.author_name}}"><br>
+                
+                <h4>Genre :</h4>
+                <input type="text" name="genre" placeholder="genre" value="{{book.genre}}"><br>
+
+                <h4>Change Image:</h4>
+                <section id="home" class="book-catalog">
+                    <div class="book">
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="Book Cover">
+                {% else %}
+                    <p>No image available</p>
+                {% endif %}
+                </div>
+            </section>  
+                <input type="file" name="image"><br>
+
+                <h4>Stock:</h4>
+                <select name="stock">
+                    <option value="available" {% if book.stock == "available" %} selected {% endif %}>Available</option>
+                    <option value="out-stock" {% if book.stock == "out-stock" %} selected {% endif %}>Out-stock</option>
+                </select><br>
+
+                <input type="submit" name= "UPDATE" value="UPDATE">
+                <input type="submit" name="DELETE" value="DELETE">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

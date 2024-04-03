@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/componet/logo.jpg" type="image/x-icon">
+    <title>Register</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url("https://image.freepik.com/free-photo/empty-wooden-table-top-with-blur-bookshelves-bookstore-background_7188-619.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .hea {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            position: fixed;
+            display: flex;
+            width: 100%;
+            justify-self: auto;
+            padding: 15px 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-left: 5%;
+        }
+
+        .footer {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        #logo {
+            width: 4%;
+            height: 5%;
+            margin-left: 10%;
+        }
+
+        .register-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            
+        }
+
+        .container {
+            background-color: rgb(226, 226, 233);
+            margin: 10px;
+            padding: 20px;
+            width: 600px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+        }
+
+        h4 {
+            margin-top: 10px;
+            display: inline-block;
+            width: 100px; /* Adjust the width as needed */
+        }
+
+        input {
+            margin-bottom: 20px;
+            padding: 5px;
+            width: calc(100% - 120px); /* Adjust the width as needed */
+            box-sizing: border-box;
+            display: inline-block;
+        }
+
+        input[type="submit"] {
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            width: 25%;
+            border-radius: 20px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+
+            h4 {
+                display: block;
+                width: 100%;
+            }
+
+            input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hea">
+        <img src="/static/componet/logo.jpg" name="logo" alt="logo" id="logo">
+        <h1>Register</h1>
+    </div>
+
+    <div class="register-container">
+        <div class="container">
+            <h1 style="color: black;">Register</h1>
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message" style = "color:red;">{{ message }}</p>
+                {% endfor %}
+            {%endif%}
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                <h4>First Name :</h4>
+                <input type="text" name="firstname" placeholder="First Name"><br>
+
+                <h4>Last Name :</h4>
+                <input type="text" name="lastname" placeholder="Last Name"><br>
+
+                <h4>username :</h4>
+                <input type="text" name="username" placeholder="username"><br>
+
+                <h4>E-mail :</h4>
+                <input type="text" name="email" placeholder="E-mail"><br>
+
+                <h4>Mobile No :</h4>
+                <input type="text" name="mobile" placeholder="Mobile Number"><br>
+
+                <h4>Password :</h4>
+                <input type="password" name="password" placeholder="Password"><br>
+
+                <h4>Address :</h4>
+                <input type="text" name="address" placeholder="Address"><br>
+
+                <input type="submit" value="Register">
+            </form>
+        </div>
+    </div>
+    <footer class="footer">
+        &copy; 2023 Book Shop
+    </footer>
+</body>
+</html>

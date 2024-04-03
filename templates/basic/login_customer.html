@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/componet/logo.jpg" type="image/x-icon">   
+    {% csrf_token %}
+    <title>Login</title>
+    <style>
+         body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url("/static/componet/back_login.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 100%;
+        }
+
+        .hea {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            position: fixed;
+            display: flex;
+            width: 100%;
+            justify-self: auto;
+            padding: 15px 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-left: 5%;
+        }
+
+        .footer {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #logo {
+            width: 5%;
+            height: 5%;
+            margin-left: 10%;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color:  rgb(226, 226, 233);
+            margin: 0px;
+            padding: 20px;
+            width: 500px;
+            text-align: center;
+            border-radius: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: black;
+            text-align: center;
+        }
+
+        h4 {
+            margin-top: 10px;
+            display: inline-block;
+            width: 100px; /* Adjust the width as needed */
+        }
+
+        input {
+            margin-bottom: 30px;
+            padding: 5px;
+            width: calc(100% - 120px); /* Adjust the width as needed */
+            box-sizing: border-box;
+            display: inline-block;
+
+        }
+
+        input[type="submit"] {
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            width: 30%;
+            border-radius: 20px;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+
+            h4 {
+                display: block;
+                width: 100%;
+            }
+
+            input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hea">
+        <img src="/static/componet/logo.jpg" name="logo" alt="logo" id="logo">
+        <h1>Online Book Shop</h1>
+    </div>  
+
+    <div class="login-container">
+        <div class="container">
+            <h1>Login</h1>
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message" style = "color:red;">{{ message }}</p>
+                {% endfor %}
+            {%endif%}
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <h4>Username :</h4>
+                <input type="text" name="username" placeholder="username"><br>
+                <h4>Password :</h4>
+                <input type="password" name="password" placeholder="password"><br>
+                <input type="submit" value="Login"> &nbsp
+                <a href="{% url 'register' %}" class="btn btn-default">Create a new account</a>
+            </form>
+        </div>
+    </div>
+    <footer class="footer">
+        &copy; 2023 Book Shop
+    </footer>
+
+</body>
+</html>

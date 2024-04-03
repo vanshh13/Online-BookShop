@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/componet/logo.jpg" type="image/x-icon">   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Admin</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background-color: black;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+     
+        
+        #logo {
+            
+            width: 40px;
+            height: 40px;
+            margin : 0px 10px;
+        }
+        .logout-btn {
+            margin: 10px 10px;
+            background-color: blue;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            right: 0;
+        }
+        .logout-btn a {
+            text-decoration: none;
+            color: white;
+        }
+        .block {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px;
+            justify-content: space-around;
+        }
+
+        .card {
+            background-color: black;
+            color: white;
+            width: 200px; /* Adjust the size as needed */
+            height: 200px; /* Adjust the size as needed */
+            padding: 10px;
+            text-align: center;
+            border: 1px solid white;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card:hover {
+            background-color: #333;
+        }
+
+        .card i {
+            font-size: 1.5em; /* Adjust the icon size as needed */
+        }
+        .space{
+            margin:120px;
+        }
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .navbar {
+                width: 100%;
+            }
+
+            #logo {
+                margin-bottom: 10px; /* Add spacing between logo and logout button */
+            }
+            .block {
+                margin: 30px;
+            }
+            .logout-btn {
+                right:0;
+                margin-top: 10px; /* Add spacing above logout button */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <img src="/static/componet/logo.jpg" name="logo" alt="logo" id="logo">
+        <button class="logout-btn"><a href="admin_logout_view/">Log Out</a></button>
+    </div>
+    <div class="space"></div>
+    <div class="block">
+        <a href="addbook/" class="card">
+            <i class="fas fa-book"></i>
+            <span>Add Books</span>
+        </a>
+        <a href="userdetail/" class="card">
+            <i class="fas fa-user"></i>
+            <span>User Details</span>
+        </a>
+        <a href="managebook/" class="card">
+            <i class="fas fa-cogs"></i>
+            <span>Manage Books</span>
+        </a>
+        <a href="manageorder/" class="card">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Manage Orders</span>
+        </a>
+        <a href="orderdetail/" class="card">
+            <i class="fas fa-file-alt"></i>
+            <span>Order Details</span>
+        </a>
+        <a href="messages/" class="card">
+            <i class="fas fa-envelope"></i>
+            <span>Feedbacks</span>
+        </a>
+    </div>
+    {% include 'basic/footer.html '%}
+
+    <script>
+        function logout() {
+            alert("Logout button clicked");
+        }
+    </script>
+</body>
+</html>
+    
