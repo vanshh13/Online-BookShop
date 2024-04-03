@@ -128,23 +128,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
-# # # For customer session
-# SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use database-backed sessions
-# SESSION_COOKIE_NAME = 'customer_sessionid'
-# SESSION_COOKIE_PATH = ''
-
-# # For admin session
-# ADMIN_SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use database-backed sessions
-# ADMIN_SESSION_COOKIE_NAME = 'admin_sessionid'
-# SESSION_COOKIE_PATH = '/admin/'
-
-# # For database session
-# DATABASES_SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-# DATABASES_SESSION_COOKIE_NAME = 'database_sessionid'
-# SESSION_COOKIE_PATH = '/database/'
-
-
 # settings.py
 
 # Static files (CSS, JavaScript, Images)
