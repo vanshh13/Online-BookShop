@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/componet/logo.jpg" type="image/x-icon">
+    <title>Manage Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: #3498db;
+        }
+
+        a:hover {
+            color: #297fb8;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 600px) {
+            th, td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            th, td {
+                text-align: center;
+            }
+
+            tbody {
+                display: block;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'basic/admin_navbar.html' %}
+    <div class="container">
+        <h1>Manage Books</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Book Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Author</th>
+                    <th>Stock</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in books %}
+                    <tr>
+                        <td>{{ b.book_id }}</td>
+                        <td>{{ b.book_name }}</td>
+                        <td>{{ b.category }}</td>
+                        <td>{{ b.price }}</td>
+                        <td>{{ b.author_name }}</td>
+                        <td>{{ b.stock }}</td>
+                        <td><a href="{% url 'updatebook' b.book_id %}">Update</a></td>
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

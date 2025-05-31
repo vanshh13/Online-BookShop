@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/static/componet/logo.jpg">
+
+    <title>Customer Profile - Book Shop</title>
+    <link rel="stylesheet" href="main.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .Back{
+            background-color: #fff;
+            color: #3498db;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            display: inline-block;
+            position: absolute;
+            margin: 25px 25px;
+            cursor: pointer;
+        }
+        .Back a{
+            text-decoration: none;
+            color: #3498db;
+        }
+        .logout{
+            background-color: #fff;
+            color: #3498db;
+            border: none;
+            padding: 10px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            position: absolute;
+            right:0;
+            margin-right: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .logout a{
+            text-decoration: none;
+            color: #3498db;
+        }
+        .hea {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            position: fixed;
+            display: flex;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-left: 8%;
+        }
+
+        .profile-container {
+            max-width: 50%;
+            margin: 0% auto;
+            background-color: #fff;
+            padding: 2%;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            text-align: center;
+            margin: 2%;
+        }
+
+        .order-history {
+            margin-top: 30px;
+        }
+
+        .order {
+            border-bottom: 1px solid #ddd;
+            padding: 20px 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-mar {
+            margin-left: 5%;
+        }
+        footer{
+            bottom: 0;
+        }
+        .footer {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            bottom: 0;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        
+        
+        .save-button {
+            margin-top: 5%;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            /* Remove underline */
+            display: inline-block;
+            /* Make it look like a button */
+        }
+
+        .edit-button:hover {
+            background-color: #297fb8;
+        }
+
+        .track-order-button ,.cancel-order-button{
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            /* Remove underline */
+            display: inline-block;
+            /* Make it look like a button */
+            margin-top: 20px;
+        }
+
+        .track-order-button:hover {
+            background-color: #297fb8;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        
+        <header class="hea">
+            <button class="Back"><a href="/dashboard/">Back</a></button>
+            &nbsp &nbsp<h1>Customer Profile</h1>
+            <button class="logout"><a href="logout_view/">Log out</a></button>
+        </header>
+    </div>
+    <br><br><br><br><br><br><br>
+    <div class="profile-container">
+        <div class="profile-picture"> <a href="edit/">
+            {% if profile.image %}
+                <img src="{{ profile.image.url }}" alt="Profile Picture">
+            {% else %}
+                <img src="/static/componet/profile.png" alt="Default Profile Picture">
+            {% endif %}
+        </div>
+        </a>
+        <div class="profile-info">
+            <h2>{{ profile.firstname}} {{profile.lastname }}</h2>
+            <p>First Name: {{ profile.firstname }}</p>
+            <p>Last Name: {{ profile.lastname }}</p>
+            <p>Email: {{ profile.email }}</p>
+            <p>Mobile Number: {{ profile.mobile }}</p>
+            <p>Address: {{ profile.address }}</p>
+        </div>
+
+        <div class="order-history">
+            <h3>Order History</h3>
+            {% for od in order %}
+                {% if od.status != "canceled" and od.status != "delivered" %}
+                    <div class="order">
+                        <span class="order-mar">{{od.orderid}}</span>
+                        <span class="order-mar">{{od.status}} </span>
+                        <span class="order-mar">{{od.date}}</span>
+                        <span class="order-mar">
+                            <form method="post" action="{% url 'orderTrack' %}">
+                                {% csrf_token %}
+                                <input type="hidden" id="orderid" name="orderid" value="{{od.orderid}}">
+                                <button class="track-order-button" onclick="trackOrder()">Track Order</button>
+                            </form>
+                        </span>
+                        <span class="order-mar">
+                            <form method="post" action="{% url 'cancelOrder' %}">
+                                {% csrf_token %}
+                                <input type="hidden" id="orderid" name="orderid" value="{{od.orderid}}">
+                                <button class="cancel-order-button" onclick="cancelOrder()">Cancel Order</button>
+                            </form>
+                        </span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>        
+    <script>
+        function cancelOrder() {
+            alert("Order canceled!");
+            document.getElementById('cancel-order-form').submit();
+        }
+    </script>
+    <footer class="footer">
+        &copy; 2023 Book Shop
+    </footer>
+</body>
+
+</html>

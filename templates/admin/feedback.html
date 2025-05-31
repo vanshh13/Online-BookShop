@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/static/componet/logo.jpg">
+    <title>Message List</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+    }
+    
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+        text-align: center;
+        color: #007bff; /* Blue color */
+    }
+    
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    li {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #007bff; /* Blue color */
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+    }
+    
+    li:hover {
+        background-color: #0056b3; /* Darker blue color on hover */
+    }
+    
+    .message-content,.name {
+        font-size: 16px;
+        color: #ffffff; /* White color for text */
+        margin-bottom: 10px;
+    }
+    
+    .timestamp {
+        font-size: 14px;
+        color: #f0f0f0; /* Light gray color for timestamp */
+    }
+    
+    </style>
+</head>
+<body>
+  {% include 'basic/admin_navbar.html' %}
+    <div class="container">
+        <h1>Message List</h1>
+        <ul>
+            {% for message in messages %}
+                <li>
+                   <h3> <div class="name">{{ message.customer.firstname }}</div></h3>
+                    <div class="message-content">{{ message.messagecontent }}</div>
+                    <div class="timestamp">{{ message.timestamp }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
