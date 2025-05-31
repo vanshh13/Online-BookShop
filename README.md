@@ -19,15 +19,17 @@ An online bookstore web application developed using Python and Django. This plat
 
 ## 📂 Project Structure
 
+```text
 Online-BookShop/
-├── Shop/ # Main Django application
-├── book/ # App handling book-related functionalities
-├── media/ # Directory for media files
-├── static/ # Static files (CSS, JS, Images)
-├── templates/ # HTML templates
-├── db.sqlite3 # SQLite database
-├── manage.py # Django's command-line utility
-└── README.md # Project documentation
+├── Shop/             # Main Django application
+├── book/             # App handling book-related functionalities
+├── media/            # Directory for media files
+├── static/           # Static files (CSS, JS, Images)
+├── templates/        # HTML templates
+├── db.sqlite3        # SQLite database
+├── manage.py         # Django's command-line utility
+└── README.md         # Project documentation
+```
 
 
 ## ⚙️ Installation & Setup
