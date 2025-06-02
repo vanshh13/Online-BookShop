@@ -5,222 +5,439 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/static/componet/logo.jpg">
-
     <title>Customer Profile - Book Shop</title>
-    <link rel="stylesheet" href="main.css">
     <style>
+        /* CSS Variables for consistency and easy theming */
+        :root {
+            --primary-color: #3498db; /* Bright Blue */
+            --secondary-color: #2c3e50; /* Dark Blue-Gray */
+            --text-color: #333;
+            --light-text-color: #fff;
+            --background-color: #f0f2f5; /* Light Grayish Blue */
+            --card-background: #ffffff;
+            --border-color: #e0e0e0;
+            --button-hover-color: #2980b9;
+            --font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+            --spacing-xl: 30px;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: var(--font-family-primary);
+            background-color: var(--background-color);
             margin: 0;
-        }
-        .Back{
-            background-color: #fff;
-            color: #3498db;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            display: inline-block;
-            position: absolute;
-            margin: 25px 25px;
-            cursor: pointer;
-        }
-        .Back a{
-            text-decoration: none;
-            color: #3498db;
-        }
-        .logout{
-            background-color: #fff;
-            color: #3498db;
-            border: none;
-            padding: 10px 10px;
-            border-radius: 4px;
-            display: inline-block;
-            position: absolute;
-            right:0;
-            margin-right: 30px;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        .logout a{
-            text-decoration: none;
-            color: #3498db;
-        }
-        .hea {
-            background-color: #3498db;
-            color: #fff;
-            text-align: center;
-            position: fixed;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll */
             display: flex;
-            width: 100%;
+            flex-direction: column;
+            min-height: 110vh; /* Ensure footer sticks to bottom */
         }
 
-        h1 {
-            text-align: center;
-            margin-left: 8%;
+        /* Header */
+        .site-header {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            padding: var(--spacing-md) var(--spacing-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
         }
 
-        .profile-container {
-            max-width: 50%;
-            margin: 0% auto;
-            background-color: #fff;
-            padding: 2%;
+        .site-header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            flex-grow: 1; /* Allow title to take available space */
+            text-align: center; /* Center title by default */
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .header-button {
+            background-color: var(--light-text-color);
+            color: var(--primary-color);
+            border: none;
+            margin-right: 10px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .header-button:hover {
+            background-color: var(--button-hover-color);
+            color: var(--light-text-color);
+        }
+
+        .header-button a {
+            text-decoration: none;
+            color: inherit; /* Inherit color from button */
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1; /* Allow main content to grow and push footer down */
+            padding: var(--spacing-xl) var(--spacing-md); /* Top/bottom padding for header offset */
+            margin: var(--spacing-xl) auto; /* Center the content area */
+            display: grid;
+            gap: var(--spacing-xl);
+            grid-template-columns: 1fr; /* Single column on smaller screens */
+            width:100%;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background-color: var(--card-background);
+            padding: var(--spacing-xl);
             border-radius: 8px;
-            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            width:85%;
         }
 
         .profile-picture {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             overflow: hidden;
-            margin: 0 auto 20px;
-            position: relative;
+            margin: 0 auto var(--spacing-lg);
+            border: 3px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .profile-picture img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
 
         .profile-info {
+            text-align: left;
+            margin-top: var(--spacing-md);
+            max-width: 400px; /* Constrain info width for readability */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .profile-info p {
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.05em;
+        }
+
+        .profile-info p strong {
+            color: var(--secondary-color);
+            min-width: 120px; /* Align labels */
+            display: inline-block;
+        }
+        
+        .profile-edit-button {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+            margin-top: var(--spacing-lg);
+            transition: background-color 0.3s ease;
+        }
+
+        .profile-edit-button:hover {
+            background-color: var(--button-hover-color);
+        }
+
+        /* Order History Section */
+        .order-history-section {
+            background-color: var(--card-background);
+            padding: var(--spacing-xl);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .order-history-section h3 {
             text-align: center;
-            margin: 2%;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xl);
+            font-size: 1.5em;
         }
 
-        .order-history {
-            margin-top: 30px;
+        .order-list {
+            display: grid;
+            gap: var(--spacing-md); /* Space between orders */
         }
 
-        .order {
-            border-bottom: 1px solid #ddd;
-            padding: 20px 2px;
+        .order-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: var(--spacing-md);
             display: flex;
+            flex-wrap: wrap; /* Allow items to wrap within an order */
             justify-content: space-between;
             align-items: center;
+            background-color: #fdfdfd;
         }
 
-        .order-mar {
-            margin-left: 5%;
+        .order-details {
+            flex-grow: 1;
+            margin-right: var(--spacing-md); /* Space before buttons */
+            min-width: 180px; /* Ensure details don't get too squished */
         }
-        footer{
-            bottom: 0;
+
+        .order-details p {
+            margin: var(--spacing-xs) 0;
+            font-size: 0.95em;
         }
-        .footer {
-            background-color: #3498db;
-            color: #fff;
+
+        .order-details p strong {
+            color: var(--secondary-color);
+        }
+
+        .order-status {
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .status-processing { color: #e67e22; /* Orange */ }
+        .status-shipped { color: #3498db; /* Blue */ }
+        .status-pending { color: #9b59b6; /* Purple */ }
+        .status-delivered { color: #27ae60; /* Green */ }
+        .status-canceled { color: #e74c3c; /* Red */ }
+
+
+        .order-actions {
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap */
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm); /* Space from details if wrapped */
+        }
+        @media (min-width: 768px) { /* Adjust margin-top for larger screens if not wrapped */
+            .order-actions {
+                margin-top: 0;
+            }
+        }
+
+
+        .order-action-button {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .order-action-button:hover {
+            background-color: var(--button-hover-color);
+        }
+
+        .cancel-order-button {
+            background-color: var(--error-color);
+        }
+
+        .cancel-order-button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Footer */
+        .site-footer {
+            background-color: var(--secondary-color);
+            color: var(--light-text-color);
             text-align: center;
-            padding: 10px 0;
-            bottom: 0;
-            width: 100%;
-            margin-top: 20px;
+            padding: var(--spacing-md) 0;
+            margin-top: var(--spacing-xl); /* Add space above footer */
         }
 
-        
-        
-        .save-button {
-            margin-top: 5%;
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            /* Remove underline */
-            display: inline-block;
-            /* Make it look like a button */
+        /* Responsive Adjustments */
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 2fr; /* Profile on left, orders on right */
+            }
+
+            .profile-section {
+                text-align: center; /* Center profile content */
+            }
+
+            .profile-info {
+                text-align: left; /* Keep text left-aligned within info box */
+            }
+
+            .site-header h1 {
+                text-align: left; /* Align title left on wider screens */
+            }
+
+            .order-item {
+                flex-wrap: nowrap; /* Prevent wrapping in order items on wider screens */
+            }
         }
 
-        .edit-button:hover {
-            background-color: #297fb8;
+        @media (max-width: 767px) {
+            .site-header {
+                flex-direction: column;
+                padding: var(--spacing-sm) var(--spacing-md);
+            }
+            .site-header h1 {
+                font-size: 1.5em;
+                margin-bottom: var(--spacing-md);
+            }
+            .header-buttons {
+                width: 100%; /* Make buttons full width */
+                justify-content: space-around;
+            }
+            .header-button {
+                flex-grow: 1; /* Distribute space among buttons */
+                text-align: center;
+                padding: var(--spacing-sm);
+            }
+
+            .main-content {
+                padding: var(--spacing-lg) var(--spacing-sm);
+                margin-top: var(--spacing-lg); /* Adjust top margin for smaller header */
+            }
+
+            .profile-section, .order-history-section {
+                padding: var(--spacing-lg);
+            }
+
+            .profile-info {
+                text-align: center; /* Center text on mobile */
+            }
+
+            .order-item {
+                flex-direction: column; /* Stack details and buttons vertically */
+                align-items: flex-start; /* Align stacked items to start */
+            }
+            .order-details {
+                margin-right: 0;
+                margin-bottom: var(--spacing-md); /* Space below details */
+                width: 100%; /* Full width for details */
+            }
+            .order-actions {
+                justify-content: center; /* Center buttons when stacked */
+                width: 100%;
+            }
+            .order-action-button {
+                flex-grow: 1; /* Allow buttons to expand */
+            }
         }
 
-        .track-order-button ,.cancel-order-button{
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            /* Remove underline */
-            display: inline-block;
-            /* Make it look like a button */
-            margin-top: 20px;
-        }
-
-        .track-order-button:hover {
-            background-color: #297fb8;
+        @media (max-width: 480px) {
+            .profile-picture {
+                width: 100px;
+                height: 100px;
+            }
+            .profile-info p {
+                font-size: 0.9em;
+            }
+            .order-details p {
+                font-size: 0.85em;
+            }
+            .order-action-button {
+                font-size: 0.8em;
+                padding: var(--spacing-xs) var(--spacing-sm);
+            }
         }
     </style>
 </head>
 
 <body>
-    <div>
-        
-        <header class="hea">
-            <button class="Back"><a href="/dashboard/">Back</a></button>
-            &nbsp &nbsp<h1>Customer Profile</h1>
-            <button class="logout"><a href="logout_view/">Log out</a></button>
-        </header>
-    </div>
-    <br><br><br><br><br><br><br>
-    <div class="profile-container">
-        <div class="profile-picture"> <a href="edit/">
-            {% if profile.image %}
-                <img src="{{ profile.image.url }}" alt="Profile Picture">
-            {% else %}
-                <img src="/static/componet/profile.png" alt="Default Profile Picture">
-            {% endif %}
+    <header class="site-header">
+        <div class="header-buttons">
+            <button class="header-button"><a href="/dashboard/">Back</a></button>
         </div>
-        </a>
-        <div class="profile-info">
-            <h2>{{ profile.firstname}} {{profile.lastname }}</h2>
-            <p>First Name: {{ profile.firstname }}</p>
-            <p>Last Name: {{ profile.lastname }}</p>
-            <p>Email: {{ profile.email }}</p>
-            <p>Mobile Number: {{ profile.mobile }}</p>
-            <p>Address: {{ profile.address }}</p>
+        <h1>Customer Profile</h1>
+        <div class="header-buttons">
+            <button class="header-button"><a href="logout_view/">Log out</a></button>
         </div>
+    </header>
 
-        <div class="order-history">
-            <h3>Order History</h3>
-            {% for od in order %}
-                {% if od.status != "canceled" and od.status != "delivered" %}
-                    <div class="order">
-                        <span class="order-mar">{{od.orderid}}</span>
-                        <span class="order-mar">{{od.status}} </span>
-                        <span class="order-mar">{{od.date}}</span>
-                        <span class="order-mar">
-                            <form method="post" action="{% url 'orderTrack' %}">
-                                {% csrf_token %}
-                                <input type="hidden" id="orderid" name="orderid" value="{{od.orderid}}">
-                                <button class="track-order-button" onclick="trackOrder()">Track Order</button>
-                            </form>
-                        </span>
-                        <span class="order-mar">
-                            <form method="post" action="{% url 'cancelOrder' %}">
-                                {% csrf_token %}
-                                <input type="hidden" id="orderid" name="orderid" value="{{od.orderid}}">
-                                <button class="cancel-order-button" onclick="cancelOrder()">Cancel Order</button>
-                            </form>
-                        </span>
-                    </div>
+    <main class="main-content">
+        <section class="profile-section">
+            <a href="edit/">
+                <div class="profile-picture">
+                    {% if profile.image %}
+                        <img src="{{ profile.image.url }}" alt="Profile Picture">
+                    {% else %}
+                        <img src="/static/componet/profile.png" alt="Default Profile Picture">
+                    {% endif %}
+                </div>
+            </a>
+            <div class="profile-info">
+                <h2>{{ profile.firstname}} {{profile.lastname }}</h2>
+                <p><strong>First Name:</strong> {{ profile.firstname }}</p>
+                <p><strong>Last Name:</strong> {{ profile.lastname }}</p>
+                <p><strong>Email:</strong> {{ profile.email }}</p>
+                <p><strong>Mobile Number:</strong> {{ profile.mobile }}</p>
+                <p><strong>Address:</strong> {{ profile.address }}</p>
+            </div>
+            <a href="edit/" class="profile-edit-button">Edit Profile</a>
+        </section>
+
+        <section class="order-history-section">
+            <h3>Your Order History</h3>
+            <div class="order-list">
+                {% if order %}
+                    {% for od in order %}
+                        <div class="order-item">
+                            <div class="order-details">
+                                <p><strong>Order ID:</strong> {{ od.orderid }}</p>
+                                <p><strong>Date:</strong> {{ od.date|date:"F d, Y" }}</p>
+                                <p><strong>Status:</strong> <span class="order-status status-{{ od.status }}">{{ od.status|capfirst }}</span></p>
+                            </div>
+                            <div class="order-actions">
+                                {% if od.status != "delivered" and od.status != "canceled" %}
+                                    <form method="post" action="{% url 'orderTrack' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="orderid" value="{{ od.orderid }}">
+                                        <button class="order-action-button track-order-button" type="submit">Track Order</button>
+                                    </form>
+                                    <form method="post" action="{% url 'cancelOrder' %}" onsubmit="return confirmCancel()">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="orderid" value="{{ od.orderid }}">
+                                        <button class="order-action-button cancel-order-button" type="submit">Cancel Order</button>
+                                    </form>
+                                {% else %}
+                                    <p>No actions available for this order.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="text-align: center;">You have no past orders.</p>
                 {% endif %}
-            {% endfor %}
-        </div>
-    </div>        
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; {% now "Y" %} VV Online BookStore. All rights reserved.</p>
+    </footer>
+
     <script>
-        function cancelOrder() {
-            alert("Order canceled!");
-            document.getElementById('cancel-order-form').submit();
+        function confirmCancel() {
+            return confirm("Are you sure you want to cancel this order? This action cannot be undone.");
         }
     </script>
-    <footer class="footer">
-        &copy; 2023 Book Shop
-    </footer>
 </body>
 
 </html>

@@ -5,39 +5,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/static/componet/logo.jpg">
-    <link rel="stylesheet" href="main.css"> <!-- Link to your CSS file -->
-    <title>Edit Profile</title>
+    <title>Edit Profile - Book Shop</title>
     <style>
+        /* CSS Variables for consistency and easy theming */
+        :root {
+            --primary-color: #3498db; /* Bright Blue */
+            --secondary-color: #2c3e50; /* Dark Blue-Gray */
+            --text-color: #333;
+            --light-text-color: #fff;
+            --background-color: #f0f2f5; /* Light Grayish Blue */
+            --card-background: #ffffff;
+            --border-color: #e0e0e0;
+            --button-hover-color: #2980b9;
+            --font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+            --spacing-xl: 30px;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: var(--font-family-primary);
+            background-color: var(--background-color);
             margin: 0;
-        }
-        header {
-            background-color: #3498db;
-            color: #fff;
-            text-align: center;
-            position: fixed;
-            top: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll */
             display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure footer sticks to bottom */
+        }
+
+        /* Header */
+        .site-header {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            padding: var(--spacing-md) var(--spacing-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+        }
+
+        .site-header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            flex-grow: 1; /* Allow title to take available space */
+            text-align: center; /* Center title by default */
+        }
+
+        .header-button {
+            background-color: var(--light-text-color);
+            color: var(--primary-color);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .header-button:hover {
+            background-color: var(--button-hover-color);
+            color: var(--light-text-color);
+        }
+
+        .header-button a {
+            text-decoration: none;
+            color: inherit; /* Inherit color from button */
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1; /* Allows main content to grow and push footer down */
+            padding: var(--spacing-xl) var(--spacing-md); /* Top/bottom padding, horizontal padding */
+            margin: var(--spacing-xl) auto; /* Center the container */
+            max-width: 1000px;
             width: 100%;
-            
-        }
-
-        .edit-container {
-            max-width: 600px;
-            margin: 10% auto;
-            background-color: #fff;
-            padding: 20px;
+            background-color: var(--card-background);
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally */
         }
 
-        .profile-container {
+        /* Profile Picture Section */
+        .profile-picture-section {
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-bottom: var(--spacing-xl);
         }
 
         .profile-picture {
@@ -45,7 +110,10 @@
             height: 150px;
             border-radius: 50%;
             overflow: hidden;
-            margin: 0 auto 20px;
+            border: 3px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
         }
 
@@ -53,128 +121,219 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
 
-        #changeImage {
-            background-color: #3498db;
-            color: #fff;
+        .change-image-button {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
             border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 10px; /* Adjust margin as needed */
+            margin-top: var(--spacing-md);
+            transition: background-color 0.3s ease;
         }
 
+        .change-image-button:hover {
+            background-color: var(--button-hover-color);
+        }
+
+        /* Edit Form */
         .edit-form {
+            width: 100%; /* Take full width of parent */
+            padding: 0 var(--spacing-xl); /* Add horizontal padding inside form container */
+            box-sizing: border-box; /* Include padding in width */
             display: grid;
-            gap: 10px;
+            gap: var(--spacing-md); /* Space between form fields */
         }
-        h1 {
-            text-align: center;
-            margin-left: 5%;
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
         }
+
         label {
             font-weight: bold;
+            margin-bottom: var(--spacing-xs);
+            color: var(--secondary-color);
+            font-size: 0.95em;
         }
-        .Back{
-            background-color: #fff;
-            color: #3498db;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            display: inline-block;
-            position: absolute;
-            right:0;
-            top: 0;
-            margin-top: 20px;
-            margin-right: 30px;
-        }
-        .Back a{
-            text-decoration: none;
-            color: #3498db;
-        }
-        input,
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
         textarea {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            box-sizing: border-box;
+            box-sizing: border-box; /* Include padding in width */
+            font-size: 1em;
         }
 
-        .Save {
-            background-color: #3498db;
-            color: #fff;
+        input[type="file"] {
+            margin-top: var(--spacing-sm); /* Space if shown */
+        }
+
+        textarea {
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 80px;
+        }
+
+        .save-button {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: var(--spacing-lg); /* Space above button */
+            transition: background-color 0.3s ease;
         }
 
-        .Save:hover {
-            background-color: #297fb8;
+        .save-button:hover {
+            background-color: var(--button-hover-color);
         }
 
-        footer {
-            width: 100%;
-            background-color: #3498db;
-            color: #fff;
+        /* Footer */
+        .site-footer {
+            background-color: var(--secondary-color);
+            color: var(--light-text-color);
             text-align: center;
-            padding: 10px 0;
-            /* margin-bottom: 0%; */
-            /* position: fixed; */
+            padding: 0 0;
+            margin-top: var(--spacing-xl); /* Add space above footer */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 767px) {
+            .site-header {
+                flex-direction: column;
+                padding: var(--spacing-sm) var(--spacing-md);
+            }
+            .site-header h1 {
+                font-size: 1.5em;
+                margin-bottom: var(--spacing-md);
+            }
+            .header-button {
+                width: 100%; /* Make button full width */
+                text-align: center;
+                padding: var(--spacing-sm);
+            }
+
+            .main-content {
+                padding: var(--spacing-lg) var(--spacing-sm); /* More balanced padding on smaller screens */
+                margin-top: var(--spacing-lg);
+            }
+
+            .edit-form {
+                padding: 0 var(--spacing-md); /* Less horizontal padding for smaller screens */
+            }
+
+            .profile-picture {
+                width: 120px;
+                height: 120px;
+            }
+            .change-image-button {
+                font-size: 0.9em;
+                padding: var(--spacing-xs) var(--spacing-sm);
+            }
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            textarea {
+                font-size: 0.9em;
+                padding: var(--spacing-sm) - 2px;
+            }
+            .save-button {
+                font-size: 1em;
+                padding: var(--spacing-md) var(--spacing-lg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: var(--spacing-md) var(--spacing-xs);
+            }
+            .edit-form {
+                padding: 0 var(--spacing-xs);
+            }
+            .profile-picture {
+                width: 100px;
+                height: 100px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <header>
+    <header class="site-header">
+        <button class="header-button"><a href="/dashboard/profile/">Back</a></button>
         <h1>Edit Profile</h1>
-        <button class="Back"><a href="/dashboard/profile/">Back</a></button>
-    </header>
+        <div></div> </header>
 
-    <div class="edit-container">
-        <div class="profile-picture">
-            {% if profile.image %}
-            <img id="previewImage" src="{{ profile.image.url }}" alt="Profile Picture">
-            {% else %}
-            <img id="previewImage" src="/static/componet/profile.png" alt="Default Profile Picture">
-            {% endif %}
-        </div>
-        
-        <center>
-            <button type="none" id="changeImage" onclick="document.getElementById('image').click()">Change Image</button>
-        </center>
-        
+    <main class="main-content">
+        <section class="profile-picture-section">
+            <div class="profile-picture">
+                {% if profile.image %}
+                <img id="previewImage" src="{{ profile.image.url }}" alt="Profile Picture">
+                {% else %}
+                <img id="previewImage" src="/static/componet/profile.png" alt="Default Profile Picture">
+                {% endif %}
+            </div>
+            <button type="button" id="changeImageButton" class="change-image-button">Change Image</button>
+        </section>
+
         <form class="edit-form" method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input type="file" id="image" name="image" style="display: none;" accept="image/*" onchange="loadNewImage(event)">
-            <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" value="{{ profile.firstname }}" required>
-    
-            <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" value="{{ profile.lastname }}" required>
-    
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="{{ profile.email }}" required>
-    
-            <label for="mobile">Mobile Number:</label>
-            <input type="tel" id="mobile" name="mobile" value="{{ profile.mobile }}" required>
-    
-            <label for="address">Address:</label>
-            <textarea id="address" name="address" rows="4" required>{{ profile.address }}</textarea>
-    
-            <button type="submit" class="Save">Save Changes</button>
-        </form>
-    </div>
-    
 
-    <footer>
-        &copy; 2023 Book Shop
+            <input type="file" id="image" name="image" style="display: none;" accept="image/*" onchange="loadNewImage(event)">
+
+            {% if form %}
+                {{ form.as_p }}
+            {% else %}
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstname" value="{{ profile.firstname }}" required>
+                </div>
+        
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastname" value="{{ profile.lastname }}" required>
+                </div>
+        
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="{{ profile.email }}" required>
+                </div>
+        
+                <div class="form-group">
+                    <label for="mobile">Mobile Number:</label>
+                    <input type="tel" id="mobile" name="mobile" value="{{ profile.mobile }}" required>
+                </div>
+        
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <textarea id="address" name="address" rows="4" required>{{ profile.address }}</textarea>
+                </div>
+            {% endif %}
+    
+            <button type="submit" class="save-button">Save Changes</button>
+        </form>
+    </main>
+    
+    <footer class="site-footer">
+            <p>&copy; {% now "Y" %} VV Online BookStore. All rights reserved.</p>
     </footer>
 
     <script>
+        // Link the "Change Image" button to the hidden file input
+        document.getElementById('changeImageButton').addEventListener('click', function() {
+            document.getElementById('image').click();
+        });
+
         function loadNewImage(event) {
             var input = event.target;
             var reader = new FileReader();
@@ -184,10 +343,12 @@
                 img.src = reader.result;
             };
     
-            reader.readAsDataURL(input.files[0]);
+            // Ensure a file is selected before trying to read it
+            if (input.files && input.files[0]) {
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     </script>
-    
 </body>
 
 </html>

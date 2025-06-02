@@ -4,173 +4,908 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
     <link rel="icon" type="image/x-icon" href="/static/componet/logo.jpg">
     <title>VV Online BookStore</title>
     {% load static %}
     {% csrf_token %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
     <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #e67e22;
+            --error-color: #e74c3c;
+            --text-color: #333;
+            --light-text-color: #f4f7f6;
+            --background-color: #f4f7f6;
+            --card-background: #ffffff;
+            --border-color: #e0e0e0;
+            --font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --header-height: 70px;
+            --mobile-header-height: 120px;
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+            --spacing-xl: 30px;
+            --icon-size-header: 30px;
+            --icon-size-mobile-nav: 25px;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font-family-primary);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #2980b9;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            padding: var(--spacing-md) var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            min-height: var(--header-height);
+        }
+
+        .header .logo img {
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: transform 0.2s ease;
+        }
+
+        .header .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .header .search-bar {
+            display: flex;
+            flex-grow: 1;
+            margin: 0 var(--spacing-xl);
+            max-width: 550px;
+        }
+
+        .header .search-bar form {
+            display: flex;
+            width: 100%;
+        }
+
+        .header .search-bar input[type="text"] {
+            flex-grow: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: 25px 0 0 25px;
+            font-size: 1em;
+            outline: none;
+            background-color: #f0f4f7;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .header .search-bar input[type="text"]:focus {
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+        }
+
+        .header .search-bar button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header .search-bar button:hover {
+            background-color: #2980b9;
+            transform: scale(1.02);
+        }
+
+        /* Menu Icon (Hamburger) - Fixed visibility */
+        .menu-icon {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            z-index: 1001;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            outline: none;
+        }
+
+        .menu-icon:hover {
+            opacity: 0.8;
+        }
+
+        .menu-icon .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            margin: 4px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Hamburger animation */
+        .menu-icon.open .bar:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .menu-icon.open .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-icon.open .bar:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Navigation */
+        #nav {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        #nav li {
+            margin-left: var(--spacing-xl);
+        }
+
+        #nav a {
+            color: var(--light-text-color);
+            text-decoration: none;
+            font-size: 1.05em;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        #nav a:hover {
+            background-color: #34495e;
+            transform: translateY(-2px);
+        }
+
+        #nav .profile-icon img,
+        #nav .shopping-cart-icon img {
+            height: var(--icon-size-header);
+            width: var(--icon-size-header);
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            transition: border-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #nav .profile-icon img:hover,
+        #nav .shopping-cart-icon img:hover {
+            border-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        #nav .profile-icon span,
+        #nav .shopping-cart-icon span {
+            display: none;
+        }
+
+        /* Main Content Wrapper */
+        .content-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 1700px;
+            margin: 0 auto;
+            margin-top: var(--header-height);
+            background-color: var(--background-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            align-items: flex-start;
+            padding: 0;
+            min-height: calc(100vh - var(--header-height) - 100px);
+        }
+
+        /* Book Categories */
+        .book-categories {
+            flex: 0 0 280px;
+            background: linear-gradient(to bottom, #ecf0f1, #e0e6e9);
+            padding: var(--spacing-xl);
+            border-right: 1px solid var(--border-color);
+            border-radius: 10px 0 0 10px;
+            position: sticky;
+            top: var(--header-height);
+            height: fit-content;
+            max-height: calc(110vh - var(--header-height) - var(--spacing-xl) * 2);
+            overflow-y: auto;
+            align-self: flex-start;
+        }
+
+        .book-categories h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.6em;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .book-categories .category {
+            display: block;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: var(--text-color);
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.05em;
+            cursor: pointer;
+            text-align: left;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .book-categories .category:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        /* Book Catalog Container */
+        .book-catalog-container {
+            flex-grow: 1;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            border-radius: 0 10px 10px 0;
+            background-color: var(--card-background);
+        }
+
+        /* Book Catalog Grid */
+        .book-catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            justify-content: center;
+        }
+
+        .book {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: var(--spacing-md);
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .book:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .book img {
+            max-width: 100%;
+            height: 220px;
+            object-fit: contain;
+            border-radius: 6px;
+            margin-bottom: var(--spacing-md);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .book h3 {
+            font-size: 1.4em;
+            color: var(--primary-color);
+            margin-top: var(--spacing-sm);
+            margin-bottom: var(--spacing-xs);
+            height: 3.2em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.6em;
+            letter-spacing: -0.5px;
+        }
+
+        .book p {
+            font-size: 0.95em;
+            color: #666;
+            margin-bottom: var(--spacing-xs);
+            line-height: 1.3;
+        }
+
+        .book p:last-of-type {
+            font-weight: bold;
+            color: var(--warning-color);
+            font-size: 1.2em;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .book .out-of-stock-label {
+            color: var(--error-color) !important;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: var(--spacing-sm);
+            margin-bottom: var(--spacing-xs);
+            text-transform: uppercase;
+        }
+
+        /* Add to Cart Button */
         .add-to-cart-button {
-            background-color: #007bff;
+            background-color: var(--success-color);
             color: #fff;
             border: none;
-            padding: 10px 20px;
+            padding: var(--spacing-md) var(--spacing-xl);
             cursor: pointer;
             text-transform: uppercase;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            font-weight: bold;
+            font-size: 1.05em;
+            width: 100%;
+            letter-spacing: 0.5px;
+            margin-top: auto;
         }
-        
+
         .add-to-cart-button:hover {
-            background-color: #0056b3;
+            background-color: #219d55;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(39, 174, 96, 0.3);
         }
-        .book {
-            width: calc(25% - 20px); 
-            font-size: large;
-            border: 1px solid #ddd;
-            padding: 1%; 
-            margin: 1%; 
+
+        /* No books message */
+        .no-books-message {
             text-align: center;
+            padding: var(--spacing-xl);
+            font-size: 1.5em;
+            color: #777;
+            grid-column: 1 / -1;
+            background-color: var(--background-color);
+            border-radius: 8px;
+            margin-top: var(--spacing-xl);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* Footer Styles - Fixed positioning */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+            box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
+            margin-top: auto;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--spacing-lg);
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .footer-text p {
+            margin: 0;
+            font-size: 0.85em;
+            color: #bdc3c7;
+        }
+
+        /* Messages */
+        .messages {
+            list-style: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin: var(--spacing-md) auto;
+            max-width: 1200px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: calc(var(--header-height) + var(--spacing-md));
+            position: relative;
+            z-index: 900;
+        }
+
+        .messages li {
+            margin-bottom: var(--spacing-xs);
+            padding: var(--spacing-sm);
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .messages .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .messages .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .messages .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .messages .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+
+        /* Page Container for sticky footer */
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .header .search-bar {
+                margin: 0 var(--spacing-md);
+            }
+
+            #nav li {
+                margin-left: var(--spacing-md);
+            }
+
+            #nav .profile-icon img,
+            #nav .shopping-cart-icon img {
+                height: 28px;
+                width: 28px;
+            }
+
+            .book-categories {
+                flex: 0 0 220px;
+                padding: var(--spacing-lg);
+            }
+
+            .book-catalog-container {
+                padding: var(--spacing-lg);
+            }
+
+            .book-catalog {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: var(--spacing-md);
+            }
+
+            .book {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* Mobile Styles - Fixed hamburger and footer issues */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+                padding: var(--spacing-sm) var(--spacing-md);
+                flex-wrap: wrap;
+                min-height: var(--mobile-header-height);
+            }
+
+            .header .logo {
+                order: 1;
+                flex: 0 0 auto;
+            }
+
+            /* Show hamburger menu on mobile - FIXED */
+            .menu-icon {
+                display: flex !important;
+                order: 2;
+                flex: 0 0 auto;
+                margin-left: auto;
+            }
+
+            .header .search-bar {
+                order: 3;
+                flex-basis: 100%;
+                margin: var(--spacing-md) 0 0 0;
+                max-width: 100%;
+            }
+
+            .header .search-bar form {
+                display: flex;
+                gap: var(--spacing-sm);
+            }
+
+            .header .search-bar input[type="text"] {
+                border-radius: 8px;
+                flex: 1;
+            }
+
+            .header .search-bar button {
+                border-radius: 8px;
+                flex: 0 0 auto;
+                padding: var(--spacing-sm) var(--spacing-lg);
+            }
+
+            /* Mobile Navigation */
+            #nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background-color: var(--primary-color);
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.4);
+                transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+                z-index: 999;
+                flex-direction: column;
+                padding-top: calc(var(--mobile-header-height) + var(--spacing-xl));
+                overflow-y: auto;
+            }
+
+            #nav.show {
+                right: 0;
+            }
+
+            #nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                padding: 0;
+            }
+
+            #nav li {
+                margin: 0;
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            #nav li:last-child {
+                border-bottom: none;
+            }
+
+            #nav a {
+                padding: var(--spacing-md) var(--spacing-xl);
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-sm);
+                width: 100%;
+            }
+
+            #nav .profile-icon img,
+            #nav .shopping-cart-icon img {
+                height: var(--icon-size-mobile-nav);
+                width: var(--icon-size-mobile-nav);
+                border: none;
+            }
+
+            #nav .profile-icon span,
+            #nav .shopping-cart-icon span {
+                display: inline;
+                color: var(--light-text-color);
+                font-weight: bold;
+            }
+
+            /* Main content adjustments */
+            .content-wrapper {
+                flex-direction: column;
+                margin-top: var(--mobile-header-height);
+                margin-bottom: 19vh;
+                box-shadow: none;
+                border-radius: 0;
+                min-height: auto;
+                padding: var(--spacing-md);
+            }
+
+            .book-categories,
+            .book-catalog-container {
+                width: 100%;
+                padding: 0;
+                border: none;
+                border-radius: 0;
+                position: static;
+                height: auto;
+                max-height: none;
+                overflow-y: visible;
+            }
+
+            .book-categories {
+                order: 1;
+                border-bottom: 1px solid var(--border-color);
+                margin-bottom: var(--spacing-lg);
+                text-align: center;
+                background-color: var(--card-background);
+                border-radius: 8px;
+                padding: var(--spacing-md);
+            }
+
+            .book-categories h3 {
+                margin-bottom: var(--spacing-md);
+            }
+
+            .book-categories .category {
+                display: inline-block;
+                margin: var(--spacing-xs);
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 0.9em;
+                text-align: center;
+            }
+
+            .book-catalog-container {
+                order: 2;
+                padding: var(--spacing-md);
+            }
+
+            .book-catalog {
+                gap: var(--spacing-md);
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .book img {
+                height: 180px;
+            }
+
+            .messages {
+                margin-top: calc(var(--mobile-header-height) + var(--spacing-md));
+            }
+
+            /* Footer fixes for mobile */
+            footer {
+                margin-top: var(--spacing-xl);
+                padding: var(--spacing-lg) var(--spacing-md);
+            }
+
+            .footer-links ul {
+                gap: var(--spacing-md);
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Smaller mobile devices */
+        @media (max-width: 480px) {
+            .header {
+                padding: var(--spacing-sm);
+            }
+
+            .header .logo img {
+                height: 40px;
+            }
+
+            .content-wrapper {
+                padding: var(--spacing-sm);
+            }
+
+            .book-catalog {
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+                gap: var(--spacing-sm);
+            }
+
+            .book h3 {
+                font-size: 1.2em;
+            }
+
+            .book p {
+                font-size: 0.85em;
+            }
+
+            .book p:last-of-type {
+                font-size: 1.1em;
+            }
+
+            .add-to-cart-button {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .book-catalog {
+                grid-template-columns: 1fr;
+            }
+
+            .book {
+                max-width: 90%;
+                margin: 0 auto;
+            }
         }
     </style>
-    <script>
-        function toggleMenu() {
-            var nav = document.getElementById("nav");
-            var body = document.body;
-            var isMenuOpen = nav.classList.toggle("show");
-
-            body.classList.toggle("menu-open", isMenuOpen);
-
-            var navLinks = document.querySelectorAll("#nav a");
-            navLinks.forEach(function (link) {
-                link.addEventListener("click", function () {
-                    nav.classList.remove("show");
-                    body.classList.remove("menu-open");
-                });
-            });
-        }
-
-        function addToCart(bookTitle) {
-            alert('Added "' + bookTitle + '" to the cart!');
-        }
-
-        function submitCategory(category) {
-            document.getElementById('categoryInput').value = category;
-            document.getElementById('categoryForm').submit();
-        }
-    </script>
-
 </head>
 
 <body>
     <header class="header">
         <div class="logo">
-            <img src="/static/componet/logo.jpg" alt="Logo">
+            <img src="/static/componet/logo.jpg" alt="VV Online BookStore Logo">
+        </div>
+        <div class="menu-icon">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
         </div>
         <div class="search-bar">
-        {% if profile%}
-        <form method="post" action="{% url 'dashboard_view' %}">
-        {% else %}
-        <form method="post" action="{% url 'hom' %}">
-        {%endif%}
+            {% if profile%}
+            <form method="post" action="{% url 'dashboard_view' %}">
+            {% else %}
+            <form method="post" action="{% url 'hom' %}">
+            {%endif%}
+                {% csrf_token %}
+                <input type="text" id="query" name="query" placeholder="Search books..." required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
-            {% csrf_token %}
-            <input type="text" id="query" name="query" placeholder="Search..." required>
-            <button type="submit">Search</button>
-        
-        </form>
-    </div>
-        <div class="menu-icon" onclick="toggleMenu()">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-       
         <nav id="nav">
             <ul>
+                {# Profile and Cart Icons (Now visible as icons + text on mobile) #}
                 <li>
-                    <div class="profile-icon">
-                        <a href="profile/">{% if profile.image %}
+                    <a href="{% if profile %}{% url 'profile' %}{% else %}{% url 'login' %}{% endif %}" class="profile-icon"> {# Added class here #}
+                        {% if profile.image %}
                             <img src="{{ profile.image.url }}" alt="Profile Picture">
                         {% else %}
                             <img src="/static/componet/profile.png" alt="Default Profile Picture">
                         {% endif %}
-                        </a>
-                    </div>
-                </li>                
-                <li> <div class="profile-icon">
-                    <a href="shopping/"><img src="/static/componet/shopping.png" alt="Profile Icon">
+                        <span>Profile</span> {# Added text for clarity on mobile #}
                     </a>
                 </li>
-                {% comment %} {% if request.user is not none%} {% endcomment %}
+                <li>
+                    <a href="{% if profile %}{% url 'shop' %}{% else %}{% url 'shopping' %}{% endif %}" class="shopping-cart-icon"> {# Added class here #}
+                        <img src="/static/componet/shopping.png" alt="Shopping Cart Icon">
+                        <span>Cart</span> {# Added text for clarity on mobile #}
+                    </a>
+                </li>
+                {# Navigation Links #}
                 {% if profile %}
-                <li><a href="/dashboard/">Home</a></li>
-                <li><a href="about/">About</a></li>
+                    <li><a href="{% url 'dashboard_view' %}">Home</a></li>
+                    <li><a href="{% url 'about_view' %}">Contact Us</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
-                <li><a href="/">Home</a></li>
-                <li><a href="/about/">About</a></li>
-                {%endif%}
+                    <li><a href="{% url 'hom' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">Contact Us</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+                {% comment %} <li><a href="{% url 'contact_us' %}">Contact Us</a></li> {# Added Contact Us to nav #} {% endcomment %}
             </ul>
         </nav>
 
     </header>
 
-    <div class="mar">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="content-wrapper">
         <section class="book-categories">
-            <h3>Category</h3><br>
-            {% csrf_token %}
-            <a href="#" onclick="submitCategory('Fiction')"><span class="category">Fiction</span></a>
-            <a href="#" onclick="submitCategory('Mystery')"><span class="category">Mystery</span></a>
-            <a href="#" onclick="submitCategory('Religious')"><span class="category">Religious</span></a>
+            <h3>Explore Categories</h3>
+            <a onclick="submitCategory('Fiction')"><span class="category">Fiction</span></a>
+            <a onclick="submitCategory('Mystery')"><span class="category">Mystery</span></a>
+            <a onclick="submitCategory('Thriller')"><span class="category">Thriller</span></a>
+            <a onclick="submitCategory('Fantasy')"><span class="category">Fantasy</span></a>
+            <a onclick="submitCategory('Science Fiction')"><span class="category">Science Fiction</span></a>
+            <a onclick="submitCategory('Romance')"><span class="category">Romance</span></a>
+            <a onclick="submitCategory('Horror')"><span class="category">Horror</span></a>
+            <a onclick="submitCategory('Biography')"><span class="category">Biography</span></a>
+            <a onclick="submitCategory('History')"><span class="category">History</span></a>
+            <a onclick="submitCategory('Religious')"><span class="category">Religious</span></a>
+            <a onclick="submitCategory('Children\'s')"><span class="category">Children's</span></a>
+            <a onclick="submitCategory('Science & Nature')"><span class="category">Science & Nature</span></a>
+            <a onclick="submitCategory('Technology & Programming')"><span class="category">Technology & Programming</span></a>
+            <a onclick="submitCategory('Art & Photography')"><span class="category">Art & Photography</span></a>
+            <a onclick="submitCategory('Cookbooks')"><span class="category">Cookbooks</span></a>
+            <a onclick="submitCategory('Travel')"><span class="category">Travel</span></a>
+            <a onclick="submitCategory('Self-Help')"><span class="category">Self-Help</span></a>
+
             {% if profile%}
             <form id="categoryForm" method="post" action="{% url 'dashboard_view' %}">
             {% else %}
             <form id="categoryForm" method="post" action="{% url 'hom' %}">
-            {% endif%} 
+            {% endif%}
                 {% csrf_token %}
                 <input type="hidden" id="categoryInput" name="query" value="">
             </form>
         </section>
 
-        <section id="home" class="book-catalog">
-            {% for book in books %}
-                {% if book.stock == "available" %}        
-                    <div class="book">
-                        {% if request.user is not none%}
-                        <a href="{% url 'book_detail_auth' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
-                        {% else %}
-                        <a href="{% url 'book_detail' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
-                        {% endif%}
-                        <h3>{{ book.book_name }}</h3>
-                        <p>Author: {{ book.author_name }}</p>
-                        <p>Genre: {{ book.genre }}</p>
-                        <p>Price: {{ book.price }}</p>
-                        <form method="post" action="{% url 'Addtocart_book' %}">
-                            {% csrf_token %}
-                            <input type="hidden" id="book" name="book" value="{{book.book_id}}">
-                            <button class="add-to-cart-button" onclick="addToCart('{{ book.book_name }}')">Add to Cart</button>
-                        </form>
-                    </div>
-                {%else%}
-                <div class="book">
-                    {% comment %} {% if request.user is not none%} {% endcomment %}
-                    {%if profile%}
-                    <a href="{% url 'book_detail_auth' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
-                    {% else %}
-                    <a href="{% url 'book_detail' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
-                    {% endif%}
-                    <h3>{{ book.book_name }}</h3>
-                    <p>Author: {{ book.author_name }}</p>
-                    <p>Genre: {{ book.genre }}</p>
-                    <p>Price: {{ book.price }}</p>
-                    <h3 style= "color:red;">Out of Stock </h3>
-                </div>
-                {% endif%}
-            {% endfor %}
-
-
-        </section>  
+        <div class="book-catalog-container">
+            <section id="home" class="book-catalog">
+                {% if books %} {# Check if the 'books' list is not empty #}
+                    {% for book in books %}
+                        <div class="book">
+                            {% if book.stock == "available" %}
+                                {% if profile %}
+                                    <a href="{% url 'book_detail_auth' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
+                                {% else %}
+                                    <a href="{% url 'book_detail' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
+                                {% endif%}
+                                <h3>{{ book.book_name }}</h3>
+                                <p>Author: {{ book.author_name }}</p>
+                                <p>Genre: {{ book.genre }}</p>
+                                <p>Price: Rs. {{ book.price }}</p>
+                                <form method="post" action="{% url 'Addtocart_book' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" id="book" name="book" value="{{book.book_id}}">
+                                    <button class="add-to-cart-button" type="submit">Add to Cart</button>
+                                </form>
+                            {% else %}
+                                {% if profile %}
+                                    <a href="{% url 'book_detail_auth' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
+                                {% else %}
+                                    <a href="{% url 'book_detail' book.book_id %}"><img src="{{ book.cover_image.url }}" alt="{{ book.book_name }}"></a>
+                                {% endif%}
+                                <h3>{{ book.book_name }}</h3>
+                                <p>Author: {{ book.author_name }}</p>
+                                <p>Genre: {{ book.genre }}</p>
+                                <p>Price: Rs. {{ book.price }}</p>
+                                <span class="out-of-stock-label">Out of Stock</span> {# Changed to span for better styling #}
+                            {% endif%}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-books-message">No books found in this category.</p> {# Display message if no books #}
+                {% endif %}
+            </section>
+        </div>
     </div>
 
     <footer>
@@ -179,16 +914,86 @@
                 <ul>
                     <li><a href="#privacy">Privacy Policy</a></li>
                     <li><a href="#terms">Terms of Service</a></li>
+                    <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-text">
-            <p>&copy; 2023 Your Company Name. All rights reserved.</p>
+            <p>&copy; {% now "Y" %} VV Online BookStore. All rights reserved.</p>
         </div>
-
     </footer>
 
-    <script src="script.js"></script>
-</body>
+    {# Your JavaScript file #}
+    <script>
+        // script.js
+
+document.addEventListener('DOMContentLoaded', function() {
+    var menuIcon = document.querySelector(".menu-icon");
+    if (menuIcon) {
+        menuIcon.addEventListener('click', toggleMenu);
+    }
+});
+
+function toggleMenu() {
+    var nav = document.getElementById("nav");
+    var body = document.body;
+    var menuIcon = document.querySelector(".menu-icon");
+
+    // Ensure elements exist before trying to manipulate them
+    if (!nav || !body || !menuIcon) {
+        console.error("Error: One or more elements (nav, body, menuIcon) not found in toggleMenu().");
+        return; // Exit if elements are missing
+    }
+
+    var isMenuOpen = nav.classList.toggle("show");
+    body.classList.toggle("no-scroll", isMenuOpen);
+    menuIcon.classList.toggle("open", isMenuOpen);
+
+    // Add/Remove event listener for closing menu on link click
+    var navLinks = document.querySelectorAll("#nav a");
+    navLinks.forEach(function (link) {
+        if (isMenuOpen) {
+            // Use an arrow function or .bind(this) to ensure `this` context for removeEventListener if needed,
+            // but for this simple case, `closeMenuOnLinkClick` doesn't use `this` from the event target, so it's fine.
+            link.addEventListener("click", closeMenuOnLinkClick);
+        } else {
+            link.removeEventListener("click", closeMenuOnLinkClick);
+        }
+    });
+}
+
+function closeMenuOnLinkClick() {
+    // This function will close the menu and remove the scroll lock
+    var nav = document.getElementById("nav");
+    var body = document.body;
+    var menuIcon = document.querySelector(".menu-icon");
+
+    if (nav) nav.classList.remove("show");
+    if (body) body.classList.remove("no-scroll");
+    if (menuIcon) menuIcon.classList.remove("open");
+
+    // After closing the menu, it's good practice to also remove the event listeners
+    // on the nav links to avoid multiple listeners accumulating.
+    // This part is handled by the `toggleMenu` function itself when `isMenuOpen` is false.
+    // However, if closeMenuOnLinkClick is called directly (e.g., if a link's default behavior
+    // like navigation changes the page), the listeners are implicitly cleaned up.
+    // If you want to explicitly clean them up *within* this function, you'd need to
+    // iterate over navLinks again and remove the listener, but typically, `toggleMenu`
+    // handles the adding/removing cycle.
+}
+
+function submitCategory(category) {
+    var categoryInput = document.getElementById('categoryInput');
+    var categoryForm = document.getElementById('categoryForm');
+
+    if (categoryInput && categoryForm) {
+        categoryInput.value = category;
+        categoryForm.submit();
+    } else {
+        console.error("Error: Category input or form not found.");
+    }
+}
+    </script>
+    </body>
 
 </html>

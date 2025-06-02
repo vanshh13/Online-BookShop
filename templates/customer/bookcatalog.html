@@ -4,145 +4,304 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/static/componet/logo.jpg">
-
     <title>{{ book.book_name }} Details</title>
-    <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+    /* CSS Variables for consistency and easy theming */
+    :root {
+        --primary-color: #2c3e50; /* Dark Blue-Gray */
+        --accent-color: #3498db; /* Bright Blue */
+        --success-color: #27ae60; /* Green */
+        --warning-color: #e67e22; /* Orange */
+        --error-color: #e74c3c; /* Red */
+        --text-color: #333;
+        --light-text-color: #f4f7f6;
+        --background-color: #f4f7f6;
+        --card-background: #ffffff;
+        --border-color: #e0e0e0;
+        --font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        --spacing-xs: 5px;
+        --spacing-sm: 10px;
+        --spacing-md: 15px;
+        --spacing-lg: 20px;
+        --spacing-xl: 30px;
+    }
 
-        .container {
-            max-width: 900px; /* Adjusted max-width */
-            margin: 40px auto;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-        }
+    /* General Body & Base Styles */
+    body {
+        font-family: var(--font-family-primary);
+        background-color: var(--background-color);
+        margin: 0;
+        /* Padding only on the main wrapper, not body, to avoid scroll issues */
+        padding: 0;
+        color: var(--text-color);
+        line-height: 1.6;
+        /* Ensure no horizontal scrollbar by default unless explicitly needed */
+        overflow-x: hidden; 
+    }
 
-        /* Book Details Styles */
+    /* Navigation Bar Styles */
+    .navbar {
+        background-color: var(--primary-color);
+        color: var(--light-text-color);
+        padding: var(--spacing-md) var(--spacing-lg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: sticky; /* Make navbar sticky */
+        top: 0;
+        left: 0; /* Ensure it sticks to the left edge */
+        width: 100%; /* Ensure it spans full width */
+        z-index: 1000;
+        box-sizing: border-box; /* Important for full width + padding */
+    }
+
+    .navbar h2 {
+        margin: 0;
+        font-size: 1.5em;
+    }
+
+    /* Back Button Styles */
+    .back-button {
+        background-color: var(--accent-color);
+        color: #fff;
+        border: none;
+        padding: var(--spacing-sm) var(--spacing-md);
+        cursor: pointer;
+        border-radius: 5px;
+        text-transform: uppercase;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+    }
+
+    /* Container for Book Details - REVISED */
+    .container {
+        max-width: 1000px; /* Slightly wider container */
+        height: 140vh;
+        margin: var(--spacing-xl) auto;
+        padding: 0 var(--spacing-lg); /* Only horizontal padding for desktop */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: var(--spacing-xl);
+        box-sizing: border-box; /* Critical for responsiveness */
+        width: 80%; /* Ensure it takes full width on smaller screens, then max-width caps it */
+    }
+
+    /* Book Details Section */
+    .book-details {
+        background-color: var(--card-background);
+        border-radius: 10px;
+        padding: var(--spacing-xl);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column; /* Default to column for consistency, then row for desktop */
+        align-items: center;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .book-details img {
+        max-width: 350px;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .book-details-content {
+        flex-grow: 1;
+        text-align: left; /* Default to left, can override for mobile if desired */
+        width: 100%;
+    }
+
+    .book-details-content h1 {
+        color: var(--primary-color);
+        margin-top: 0;
+        margin-bottom: var(--spacing-md);
+        font-size: 2em;
+    }
+
+    .book-details-content p {
+        margin-bottom: var(--spacing-sm);
+        font-size: 1.1em;
+        color: #555;
+    }
+
+    .book-details-content p strong {
+        color: var(--primary-color);
+    }
+
+    .book-details-content .price {
+        font-size: 1.4em;
+        font-weight: bold;
+        color: var(--warning-color);
+        margin-top: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .book-details-content .description {
+        font-size: 1em;
+        line-height: 1.8;
+        margin-top: var(--spacing-lg);
+        color: #444;
+    }
+
+    /* Stock Status */
+    .stock-available {
+        color: var(--success-color);
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+    .stock-out {
+        color: var(--error-color);
+        font-weight: bold;
+        font-size: 1.1em;
+        text-transform: uppercase;
+    }
+
+    /* Add to Cart Button */
+    .add-to-cart {
+        background-color: var(--success-color);
+        color: #fff;
+        border: none;
+        padding: var(--spacing-md) var(--spacing-xl);
+        cursor: pointer;
+        text-transform: uppercase;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        font-weight: bold;
+        font-size: 1.1em;
+        margin-top: var(--spacing-xl);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .add-to-cart:hover {
+        background-color: #219d55;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(39, 174, 96, 0.3);
+    }
+
+    /* Responsive Styles */
+    @media screen and (min-width: 769px) {
         .book-details {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 41px 19px 46px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-            display: flex;
-            flex-grow: 1; /* Expanded to take up available space */
-            margin-right: 80px; /* Added margin between catalog and details */
+            flex-direction: row; /* Side-by-side for larger screens */
+            text-align: left;
+            align-items: flex-start;
         }
 
         .book-details img {
-            max-width: 300px;
-            height: auto;
-            margin-left: 74px; 
-            margin-right: 30px;
+            margin-right: var(--spacing-xl);
+            margin-bottom: 0;
         }
+    }
 
-        .book-details-content {
-            flex-grow: 1;
-        }
-
-        .book-details p {
-            margin-bottom: 10px;
-        }
-
-        .add-to-cart {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            text-transform: uppercase;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-
-        .add-to-cart:hover {
-            background-color: #0056b3;
-        }
-
-        /* Navigation Bar Styles */
+    @media screen and (max-width: 768px) {
         .navbar {
-            background-color: #333;
-            color: #fff;
-            padding: 0px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            padding: var(--spacing-sm) var(--spacing-md);
         }
+        .navbar h2 {
+            margin-top: var(--spacing-sm);
+            font-size: 1.3em;
+        }
+        .container {
+            /* Keep margin: auto to center it, but ensure horizontal padding */
+            margin: var(--spacing-lg) auto;
+                
+            padding: var(--spacing-md); /* Apply uniform padding around the container */
+            /* width: 100% is already set in general container style, ensures it doesn't try to be 1000px wide */
+            /* flex-direction: column is already set on .book-details, no need here */
+        }
+        .book-details {
+            padding: var(--spacing-lg);
+        }
+        .book-details img {
+            max-width: 250px;
+            margin-bottom: var(--spacing-lg);
+        }
+        .book-details-content {
+            text-align: center; /* Center text on mobile for better appearance with stacked items */
+        }
+        .book-details-content h1 {
+            font-size: 1.8em;
+        }
+        .book-details-content p {
+            font-size: 1em;
+        }
+        .add-to-cart {
+            font-size: 1em;
+            padding: var(--spacing-md) var(--spacing-lg);
+        }
+    }
 
-        /* Back Button Styles */
+    @media screen and (max-width: 480px) {
+        .navbar h2 {
+            font-size: 1.1em;
+        }
         .back-button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            text-transform: uppercase;
-            transition: background-color 0.3s ease;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: 0.8em;
         }
-
-        .back-button:hover {
-            background-color: #0056b3;
+        .container {
+            padding: var(--spacing-sm); /* Smaller padding for very small screens */
         }
-
-        /* Responsive Styles */
-        @media screen and (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .book-details {
-                flex-direction: column;
-                text-align: center;
-                margin-right: 0; /* Remove margin for small screens */
-            }
-
-            .book-details img {
-                margin-right: 0;
-                margin-bottom: 20px;
-            }
+        .book-details {
+            padding: var(--spacing-md);
         }
-    </style>
+        .book-details img {
+            max-width: 200px;
+        }
+        .book-details-content h1 {
+            font-size: 1.5em;
+        }
+        .book-details-content .price {
+            font-size: 1.2em;
+        }
+        .add-to-cart {
+            font-size: 0.9em;
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+    }
+</style>
 </head>
 <body>
     <div class="navbar">
         <button class="back-button" onclick="window.history.back()">Back</button>
         <h2>{{ book.book_name }} Details</h2>
     </div>
+
     <div class="container">
         <div class="book-details">
             <img src="{{ book.cover_image.url }}" alt="{{ book.book_name }} Cover">
             <div class="book-details-content">
                 <h1>{{ book.book_name }}</h1>
-                <p>Author: {{ book.author_name }}</p>
-                <p>Price: ${{ book.price }}</p>
-                <p>Category: {{ book.category }}</p>
-                <p>Genre: {{ book.genre }}</p>
-                <p>Description: {{ book.description }}</p>
+                <p><strong>Author:</strong> {{ book.author_name }}</p>
+                <p class="price">Price: ₹{{ book.price }}</p> {# Changed to Indian Rupee symbol #}
+                <p><strong>Category:</strong> {{ book.category }}</p>
+                <p><strong>Genre:</strong> {{ book.genre }}</p>
+                <p class="description"><strong>Description:</strong> {{ book.description }}</p>
                 
-                {% if book.stock == "available"%}
-                <p style= "color:green;">Stock: {{ book.stock }}</p>
+                {% if book.stock == "available" %}
+                <p class="stock-available">Stock: {{ book.stock }}</p>
                 <form method="post" action="{% url 'Addtocart_book' %}">
                     {% csrf_token %}
                     <input type="hidden" id="book" name="book" value="{{book.book_id}}">
-                    <button class="add-to-cart" onclick="addToCart('{{ book.book_name }}')">Add to Cart</button>
-                </form>   
-                {%else%}
-                <p style= "color:red;">Stock: {{ book.stock }}</p> 
-                {%endif%}     
+                    <button class="add-to-cart" type="submit">Add to Cart</button>
+                </form> 
+                {% else %}
+                <p class="stock-out">Stock: {{ book.stock }}</p> 
+                {% endif %}     
             </div>
         </div>
     </div>
-    <script>
-        function addToCart(bookTitle) {
-            alert('Added "' + bookTitle + '" to the cart!');
-        }
-    </script>
 </body>
 </html>
